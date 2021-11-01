@@ -1,6 +1,5 @@
 import json,time
 import random
-import text2emotion as te
 from config import getScope, getMisc
 import discAutoMsg.discord_automessage as discAutoMsg
 
