@@ -1,13 +1,9 @@
 import requests
 import json,time
 import random
-from config import getCreds
+from mytoken import getToken
 #LOGIN#
 url = "https://discord.com"
-username,password = getCreds()
-payload = {"login":username,
-"password":password}
-
 
 session = requests.Session()
 session.get(url)
@@ -18,12 +14,7 @@ headers = {
     'Content-Type': "application/json"
     }
 
-loginResponse = requests.request("POST", url+"/api/v9/auth/login", json = payload, headers = headers)
-
-
-print(loginResponse.text)
-daToken = "ODkyNTgxMTYyNDg3MjcxNDU2.YV4Dfg.Zn1DhMLY8skfey2MgHBT3mp4FCU"
-#LOGIN IS DONE AT THIS POINT#
+daToken = getToken()
 
 def createNonce():
     daNonce = ""
@@ -46,30 +37,7 @@ def sendMessage(daChannelID, daMessage, log = True):
         print("Payload:"+str(payload))
     requests.request("POST", url+"/api/v9/channels/"+str(daChannelID)+"/messages", json = payload, headers = headers)
     time.sleep(.25)
-def sendReply(daChannelID, daMessage, msgToReply, pingInReply = True, log = True):
 
-    headers = {
-    'cookie': daDiscordCookies["__dcfduid"],
-    'authorization': daToken,
-    'Content-Type': "application/json"
-    }
-
-    payload = {
-    "content": daMessage,
-    "nonce": str(createNonce()),
-    "tts": False,
-    "message_reference": {
-        "channel_id":daChannelID,
-        "message_id":msgToReply
-        }
-    }
-    if pingInReply == False:
-        payload["allowed_mentions"] = {"parse":["users","roles","everyone"],"replied_user":False}
-    if log == True:
-        print("Payload:"+str(payload))
-  
-    requests.request("POST", url+"/api/v9/channels/"+str(daChannelID)+"/messages", json = payload, headers = headers)
-    time.sleep(.25)
 def getMessages(daChannelID, daRange, log = True):
     headers = {
     'cookie': daDiscordCookies["__dcfduid"],
